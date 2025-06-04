@@ -30,4 +30,4 @@ order_data = {
 
 
 
-![Chatbot UI](chatbot.png)
+![forecast](chatbot.png)
