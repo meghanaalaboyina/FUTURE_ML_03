@@ -1,0 +1,128 @@
+# Step 1: Import required libraries
+import tkinter as tk
+from tkinter import scrolledtext
+import random
+
+# Step 2: Define sample order data (used to simulate order tracking)
+order_data = {
+    "ORD123": "📦 Your order ORD123 is out for delivery.",
+    "ORD456": "✅ Your order ORD456 was delivered on 1st June 2025.",
+    "ORD789": "❌ Your order ORD789 was cancelled. Refund is being processed.",
+    "ORD101": "🕒 Your order ORD101 is being packed and will ship soon.",
+    "ORD202": "✅ Your order ORD202 was delivered on 28th May 2025.",
+    "ORD303": "🚚 Your order ORD303 is in transit and will arrive tomorrow."
+}
+
+# Step 3: Define supported intents, keywords, and sample responses
+intents = {
+    "greeting": {
+        "keywords": ["hi", "hello", "hey", "hii"],
+        "responses": ["Hello! How can I help you?", "Hi there! What can I do for you?"]
+    },
+    "order_status": {
+        "keywords": ["order", "track", "status", "where"],
+        "responses": ["Sure, please enter your Order ID to check the status."]
+    },
+    "refund": {
+        "keywords": ["refund", "return", "money back", "cancel"],
+        "responses": ["Okay, please enter your Order ID and reason for return."]
+    },
+    "thankyou": {
+        "keywords": ["thanks", "thank you", "ok"],
+        "responses": ["You're welcome! 😊", "Glad I could help!"]
+    },
+    "goodbye": {
+        "keywords": ["bye", "goodbye", "see you"],
+        "responses": ["Goodbye! Have a nice day!", "See you soon! 👋"]
+    }
+}
+
+# Step 4: Define chatbot's response logic
+def get_bot_response(user_input):
+    user_input = user_input.lower().strip()
+    if user_input.upper() in order_data:
+        return order_data[user_input.upper()]
+    for intent, data in intents.items():
+        if any(keyword in user_input for keyword in data["keywords"]):
+            return random.choice(data["responses"])
+    return "Sorry, I didn’t understand that. Can you please rephrase?"
+
+# Step 5: Placeholder behavior when user clicks input box
+def on_entry_click(event):
+    if user_entry.get() == 'Type your message here...':
+        user_entry.delete(0, "end")
+        user_entry.config(fg='black')
+
+def on_focusout(event):
+    if user_entry.get() == '':
+        user_entry.insert(0, 'Type your message here...')
+        user_entry.config(fg='gray')
+
+# Step 6: Function to handle sending a message
+def send_message():
+    user_input = user_entry.get()
+    if user_input.strip() == "" or user_input == 'Type your message here...':
+        return
+    chat_area.config(state=tk.NORMAL)
+    chat_area.insert(tk.END, "🧑 You: " + user_input + "\n", 'user')
+    response = get_bot_response(user_input)
+    chat_area.insert(tk.END, "🤖 Bot: " + response + "\n\n", 'bot')
+    chat_area.config(state=tk.DISABLED)
+    chat_area.see(tk.END)
+    user_entry.delete(0, tk.END)
+    user_entry.insert(0, 'Type your message here...')
+    user_entry.config(fg='gray')
+
+# Step 7: Clear chat screen and show greeting again
+def clear_chat():
+    chat_area.config(state=tk.NORMAL)
+    chat_area.delete(1.0, tk.END)
+    chat_area.insert(tk.END, "🤖 Bot: Hello! I'm your support assistant. Type your message below.\n\n", 'bot')
+    chat_area.config(state=tk.DISABLED)
+
+# Step 8: Create the main application window
+window = tk.Tk()
+window.title("Customer Support Chatbot")
+
+# Maximize the window and allow resizing
+window.state('zoomed')               # Use fullscreen but keep title bar with buttons
+window.resizable(True, True)
+
+# Step 9: Add title/header
+header = tk.Label(window, text="🤖 Customer Support Chatbot", font=("Helvetica", 18, "bold"), fg="#4CAF50")
+header.pack(pady=10)
+
+# Step 10: Chat display area (with scrollbar)
+chat_area = scrolledtext.ScrolledText(window, wrap=tk.WORD, font=("Helvetica", 12), state=tk.DISABLED)
+chat_area.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+# Style messages with color tags
+chat_area.tag_config('user', foreground='blue')
+chat_area.tag_config('bot', foreground='green')
+
+# Step 11: Insert initial greeting message from bot
+chat_area.config(state=tk.NORMAL)
+chat_area.insert(tk.END, "🤖 Bot: Hello! I'm your support assistant. Type your message below.\n\n", 'bot')
+chat_area.config(state=tk.DISABLED)
+
+# Step 12: Input field with placeholder text
+user_entry = tk.Entry(window, font=("Helvetica", 14), fg='gray')
+user_entry.pack(padx=10, pady=5, fill=tk.X)
+user_entry.insert(0, 'Type your message here...')
+user_entry.bind('<FocusIn>', on_entry_click)
+user_entry.bind('<FocusOut>', on_focusout)
+
+# Step 13: Frame to hold buttons
+button_frame = tk.Frame(window)
+button_frame.pack(padx=10, pady=5, fill=tk.X)
+
+# Step 14: Send button
+send_button = tk.Button(button_frame, text="Send", command=send_message, font=("Helvetica", 12), bg="#4CAF50", fg="white")
+send_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+# Step 15: Clear chat button
+clear_button = tk.Button(button_frame, text="Clear Chat", command=clear_chat, font=("Helvetica", 12), bg="#f44336", fg="white")
+clear_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+# Step 16: Run the main event loop
+window.mainloop()
