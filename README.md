@@ -22,11 +22,12 @@ A simple GUI-based rule-based chatbot built using Python and Tkinter. It handles
 ---
 
 ## 📦 Sample Dataset
-
-```python
 order_data = {
   "ORD123": "📦 Out for delivery",
   "ORD456": "✅ Delivered on 1st June",
   "ORD789": "❌ Cancelled, refund in process",
 }
+
+
+
 ![Chatbot UI](chatbot.png)
