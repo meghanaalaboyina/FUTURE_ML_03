@@ -29,3 +29,4 @@ order_data = {
   "ORD456": "✅ Delivered on 1st June",
   "ORD789": "❌ Cancelled, refund in process",
 }
+![Chatbot UI](chatbot.png)
