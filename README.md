@@ -30,4 +30,4 @@ order_data = {
 
 
 
-![Chatbot Interface](chat.png)
+![Chatbot Interface](chatbot.png)
